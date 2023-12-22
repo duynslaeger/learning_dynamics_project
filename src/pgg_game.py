@@ -63,13 +63,11 @@ def personnal_payoff_cooperator(wealth_class, j_r, j_p, b_r, b_p, c_r, c_p, Mcb_
 
     
     if(wealth_class == "poor"):
-        b_rp = b_p
         c_rp = c_p
     elif(wealth_class == "rich"):
-        b_rp = b_r
         c_rp = c_r
     else:
         raise ValueError('Wrong argument given in the wealth_class argument of the personnal_payoff_defector() function. Shoulb be "rich" or "poor".')
     
-    result = b_rp * (heaviside(c_r*j_r + c_p*j_p - Mcb_threshold) + (1-r)*(1 - heaviside(c_r*j_r + c_p*j_p - Mcb_threshold))) - c_rp
+    result = personnal_payoff_defector(wealth_class, j_r, j_p, b_r, b_p, c_r, c_p, Mcb_threshold, r) - c_rp
     return result
