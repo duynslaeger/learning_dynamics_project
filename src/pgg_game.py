@@ -150,7 +150,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
 
     else:
         raise ValueError(
-            'Wrong argument given in the wealth_class argument of the personnal_payoff_defector() function. Shoulb be "rich" or "poor".')
+            'Wrong argument given in the wealth_class argument of the fitness() function. Shoulb be "rich" or "poor".')
 
     return result
 
