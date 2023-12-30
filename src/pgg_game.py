@@ -104,6 +104,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
 
     if wealth_class == "poor":
         if strategy == "cooperator":
+            i_rich, i_poor = [sublist[0] for sublist in population] # Je suppose
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -115,6 +116,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
             result *= pop_coef
 
         if strategy == "defector":
+            i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -127,9 +129,10 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
 
     elif wealth_class == "rich":
         if strategy == "cooperator":
+            i_rich, i_poor = [sublist[0] for sublist in population] # Je suppose
             for j_rich in range(group_size):
                 for j_poor in range(group_size-j_rich):
-                    rich_coef = comb(i_rich-1, j_rich)
+                    rich_coef = comb(abs(i_rich-1), j_rich)
                     poor_coef = comb(i_poor, j_poor)
                     pop_group_coef = comb(population_size-i_rich-i_poor, group_size-1-j_rich-j_poor)
                     pay_off = personnal_payoff_cooperator(wealth_class, j_rich+1, j_poor, b_r, b_p, c_r, c_p,
@@ -138,6 +141,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
             result *= pop_coef
 
         if strategy == "defector":
+            i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -147,7 +151,6 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
                                                           Mcb_threshold, r)
                     result += rich_coef * poor_coef * pop_group_coef * pay_off
             result *= pop_coef
-
     else:
         raise ValueError(
             'Wrong argument given in the wealth_class argument of the fitness() function. Shoulb be "rich" or "poor".')

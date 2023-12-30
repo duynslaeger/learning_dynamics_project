@@ -1,13 +1,13 @@
 import random
 from copy import deepcopy
-from src.player_class import Player
+from player_class import Player
 
 
 class PopulationState:
     def __init__(self, Z, poor_proportion):
         self.population_list = [[], []]
         for i in range(Z):
-            if i < Z * poor_proportion:
+            if i<int(int(Z*poor_proportion)):
                 self.population_list[1].append(Player("poor"))
             else:
                 self.population_list[0].append(Player("rich"))
@@ -20,10 +20,9 @@ class PopulationState:
                 self.population[0][1] += 1
         for player in self.population_list[1]:
             if player.strategy == "cooperator":
-                self.population[0][0] += 1
+                self.population[1][0] += 1
             else:
-                self.population[0][1] += 1
-
+                self.population[1][1] += 1
     def change_strategy(self, player):
         if player.strategy == "cooperator":
             player.strategy = "defector"
@@ -41,7 +40,13 @@ class PopulationState:
             else:
                 self.population[1][0] += 1
                 self.population[1][1] -= 1
-
+    def count_cooperate_player(self):
+        counter = 0
+        for sublist in self.population_list:
+            for player in sublist:
+                if player.strategy == "cooperator":
+                    counter +=1
+        return counter
     def select(self, h):
         if h == 1:
             p1 = random.choice(self.population_list[0] + self.population_list[1])
