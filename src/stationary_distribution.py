@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from populationState_class import PopulationState
 
 def main():
-    """ Returns the stationary distribution	"""
+	""" Returns the stationary distribution	"""
 	Z = 200
 	poor_proportion = 0.8
 	beta = 10
