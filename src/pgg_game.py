@@ -100,7 +100,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
         """
     result = 0
     pop_coef = 1 / comb(population_size - 1, group_size - 1)
-    i_rich, i_poor = [sublist[0] + sublist[1] for sublist in population]
+    i_rich, i_poor = population[0][0], population[1][0] #[sublist[0] + sublist[1] for sublist in population]
 
     if wealth_class == "poor":
         if strategy == "cooperator":
