@@ -32,7 +32,7 @@ c_bar = 0.1
 M = 3
 
 Mcb_threshold = c_bar * M * b_bar
-r = 0.8
+r = 0.3
 
 T_coop_rich = 1
 T_defect_rich = 1
@@ -86,6 +86,7 @@ def compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h):
 
 M = np.zeros([(Zp + 1) * (Zr + 1), (Zp + 1) * (Zr + 1)])
 a_g = []
+M_plot = np.zeros([Zp + 1, Zr + 1])
 for rich_coop in tqdm(range(Zr + 1)):
     for poor_coop in range(Zp + 1):
         i = [[rich_coop, Zr - rich_coop], [poor_coop, Zp - poor_coop]]
@@ -130,7 +131,7 @@ for rich_coop in tqdm(range(Zr + 1)):
             f_p_c = pgg_game.fitness("poor", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
             f_p_d = pgg_game.fitness("poor", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
 
-        a_g.append((min(f_r_c, 1) + min(f_r_d, 1) + min(f_p_c, 1) + min(f_p_d, 1))/4)
+        a_g.append((min(f_r_c, 1) + min(f_r_d, 1) + min(f_p_c, 1) + min(f_p_d, 1)) / 4)
 
 print("Compute eigen values")
 w, v = np.linalg.eig(M.transpose())
@@ -139,7 +140,12 @@ j_stationary = np.argmin(abs(w - 1.0))
 print("Compute p_stationary")
 p_stationary = abs(v[:, j_stationary].real)
 
+p_plot = 1 - (p_stationary / np.max(p_stationary))
+
 p_norm = p_stationary / p_stationary.sum()
+
+for i in range(len(p_plot)):
+    M_plot[i % (Zp + 1)][i // (Zp + 1)] = p_plot[i]
 
 xs = [x for x in range(len(p_stationary))]
 
@@ -150,4 +156,7 @@ for i in range(len(a_g)):
 print(eta_g)
 
 plt.plot(xs, p_norm)
+plt.show()
+
+plt.matshow(M_plot, cmap=plt.get_cmap('gray'), vmin=0.0, vmax=1.0)
 plt.show()
