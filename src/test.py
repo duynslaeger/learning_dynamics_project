@@ -75,6 +75,7 @@ def compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h):
 
 
 M = np.zeros([(Zp + 1) * (Zr + 1), (Zp + 1) * (Zr + 1)])
+a_g = []
 for rich_coop in range(Zr + 1):
     for poor_coop in range(Zp + 1):
         i = [[rich_coop, Zr - rich_coop], [poor_coop, Zp - poor_coop]]
@@ -103,6 +104,15 @@ for rich_coop in range(Zr + 1):
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h)
                             M[rich_coop * (Zp+1) + poor_coop][rich_coop * (Zp+1) + (poor_coop + 1)] = T_k_XtoY
 
+        M[rich_coop * (Zp+1) + poor_coop][rich_coop * (Zp+1) + poor_coop] = 1 - np.sum(M[rich_coop * (Zp+1) + poor_coop])
+
+        if poor_coop != 0 and rich_coop != 0 and rich_coop != Zr and poor_coop != Zp:
+            a_g.append(pgg_game.fitness("rich", "cooperator", i, Z, N, b_r, b_p, c_r, c_p,Mcb_threshold, r))
+
+ # pgg_game.fitness("rich", "defector", i, Z, N, b_r, b_p, c_r, c_p,Mcb_threshold, r) +
+ # pgg_game.fitness("poor", "cooperator", i, Z, N, b_r, b_p, c_r, c_p,Mcb_threshold, r) +
+ # pgg_game.fitness("poor", "defector", i, Z, N, b_r, b_p, c_r, c_p,Mcb_threshold, r)
+
 w, v = np.linalg.eig(M.transpose())
 
 j_stationary = np.argmin(abs(w-1.0))
@@ -113,5 +123,5 @@ p_norm = p_stationary / p_stationary.sum()
 
 xs = [x for x in range(len(p_stationary))]
 
-plt.plot(xs, p_stationary)
+plt.plot(xs, p_norm)
 plt.show()
