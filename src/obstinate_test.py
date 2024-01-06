@@ -2,11 +2,8 @@ from math import exp
 from scipy.stats import multivariate_hypergeom
 import numpy as np
 import sys
-
 from matplotlib import pyplot as plt
-
 from tqdm import tqdm
-
 import pgg_game
 
 np.set_printoptions(threshold=sys.maxsize)

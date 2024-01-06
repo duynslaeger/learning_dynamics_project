@@ -11,8 +11,7 @@ import pgg_game
 
 np.set_printoptions(threshold=sys.maxsize)
 
-# i = [[115, 35], [35, 15]]
-Z = 200
+Z = 100
 Zr = int(Z * 0.2)
 Zp = int(Z * 0.8)
 Z_tot = [Zr, Zp]
@@ -132,7 +131,7 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
         aG_i = 0.0
         for rc in range(N): # rc represent the number of rich cooperator in the group
             for pc in range(N) : # pc represent the number of poor cooperator in the group
-                if (rc + pc) > M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
+                if(rc + pc) >= M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
                     for rd in range(N): # rd represent the number of rich defectors in the group
                         if(rc + pc + rd <= N):
                             for pd in range(N): # pd represent the number of poor defectors in the group
