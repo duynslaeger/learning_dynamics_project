@@ -12,20 +12,23 @@ import pgg_game
 np.set_printoptions(threshold=sys.maxsize)
 
 # i = [[115, 35], [35, 15]]
-Z = 100
+Z = 200
 Zr = int(Z * 0.2)
 Zp = int(Z * 0.8)
 Z_tot = [Zr, Zp]
 N = 6
 mu = 1 / Z
 h = 1
-obstinate_r_c = 0.1
-obstinate_p_c = 0
+obstinate_r_c = 0
+obstinate_p_c = 0.1
 obstinate_r_d = 0
 obstinate_p_d = 0
 obstinate_coop = [int(Zr * obstinate_r_c), int(Zp * obstinate_p_c)]
 obstinate_defector = [int(Zr * obstinate_r_d), int(Zp * obstinate_p_d)]
 beta = 3
+Zr -= obstinate_coop[0] + obstinate_defector[0]
+Zp -= obstinate_coop[1] + obstinate_defector[1]
+
 
 b_r = 2.5
 b_p = 0.625
@@ -47,7 +50,7 @@ T_coop_poor = 1
 nb_strat = 2
 
 
-def fermi_fun(a, b, i, beta):
+def fermi_fun(a, b, i, beta, Z):
     if a[0] == 0:
         wealth_class_A = "rich"
     else:
@@ -81,17 +84,11 @@ def fermi_fun(a, b, i, beta):
 
 
 def compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinators):
-    # T_k_XtoY = (i[k][X] / Z) * ((i[k][X] - obstinators) / i[k][X]) * (mu + (1 - mu) *
-    #                             (i[k][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
-    #                                 fermi_fun([k, X], [k, Y], i, beta)) +
-    #                              (1 - h) * i[l][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
-    #                                  fermi_fun([k, X], [l, Y], i, beta)))
-    #                             )
-    T_k_XtoY = ((i[k][X] - obstinators) / Z) * (mu + (1 - mu) *
+    T_k_XtoY = ((i[k][X] - obstinators) / (Z_tot[0] + Z_tot[1])) * (mu + (1 - mu) *
                                 (i[k][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
-                                    fermi_fun([k, X], [k, Y], i, beta)) +
+                                    fermi_fun([k, X], [k, Y], i, beta, Z)) +
                                  (1 - h) * i[l][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
-                                     fermi_fun([k, X], [l, Y], i, beta)))
+                                     fermi_fun([k, X], [l, Y], i, beta, Z)))
                                 )
     return T_k_XtoY
 
@@ -99,9 +96,9 @@ def compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinators):
 M = np.zeros([(Zp + 1) * (Zr + 1), (Zp + 1) * (Zr + 1)])
 a_g = []
 M_plot = np.zeros([Zp + 1, Zr + 1])
-for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
-    for poor_coop in range(obstinate_coop[1], Zp + 1 - obstinate_defector[1]):
-        i = [[rich_coop, Zr - rich_coop], [poor_coop, Zp - poor_coop]]
+for rich_coop in tqdm(range(Zr + 1)):
+    for poor_coop in range(Zp + 1):
+        i = [[rich_coop + obstinate_coop[0], Zr - rich_coop + obstinate_defector[0]], [poor_coop + obstinate_coop[1], Zp - poor_coop + obstinate_defector[1]]]
         for k in range(nb_strat):
             l = (k + 1) % nb_strat
             for v in range(nb_strat):
@@ -109,7 +106,7 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
                 Y = (v + 1) % nb_strat
                 if k == 0:
                     if X == 0:
-                        if rich_coop != 0:
+                        if rich_coop != 0 + obstinate_coop[0]:
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinate_coop[0])
                             M[rich_coop * (Zp + 1) + poor_coop][(rich_coop - 1) * (Zp + 1) + poor_coop] = T_k_XtoY
                     elif X == 1:
@@ -118,7 +115,7 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
                             M[rich_coop * (Zp + 1) + poor_coop][(rich_coop + 1) * (Zp + 1) + poor_coop] = T_k_XtoY
                 else:
                     if X == 0:
-                        if poor_coop != 0:
+                        if poor_coop != 0 + obstinate_coop[1]:
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinate_coop[1])
                             M[rich_coop * (Zp + 1) + poor_coop][rich_coop * (Zp + 1) + (poor_coop - 1)] = T_k_XtoY
                     elif X == 1:
