@@ -1,12 +1,8 @@
 from math import exp
-
 import numpy as np
 import sys
-
 from matplotlib import pyplot as plt
-
 from tqdm import tqdm
-
 import pgg_game
 
 np.set_printoptions(threshold=sys.maxsize)

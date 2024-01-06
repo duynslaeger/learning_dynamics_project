@@ -107,7 +107,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
 
     if wealth_class == "poor":
         if strategy == "cooperator":
-            #i_rich, i_poor = [sublist[0] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[0] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -119,7 +119,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
             result *= pop_coef
 
         if strategy == "defector":
-            #i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[1] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -132,7 +132,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
 
     elif wealth_class == "rich":
         if strategy == "cooperator":
-            #i_rich, i_poor = [sublist[0] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[0] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size-j_rich):
                     rich_coef = comb(abs(i_rich-1), j_rich)
@@ -144,7 +144,7 @@ def fitness(wealth_class, strategy, population, population_size, group_size, b_r
             result *= pop_coef
 
         if strategy == "defector":
-            #i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[1] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -188,7 +188,7 @@ def fraction_group(wealth_class, strategy, population, population_size, group_si
 
     if wealth_class == "poor":
         if strategy == "cooperator":
-            #i_rich, i_poor = [sublist[0] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[0] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -201,7 +201,7 @@ def fraction_group(wealth_class, strategy, population, population_size, group_si
                 result /= result2
 
         if strategy == "defector":
-            #i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[1] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)
@@ -214,7 +214,7 @@ def fraction_group(wealth_class, strategy, population, population_size, group_si
 
     elif wealth_class == "rich":
         if strategy == "cooperator":
-            #i_rich, i_poor = [sublist[0] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[0] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size-j_rich):
                     rich_coef = comb(abs(i_rich-1), j_rich)
@@ -225,7 +225,7 @@ def fraction_group(wealth_class, strategy, population, population_size, group_si
             result *= pop_coef
 
         if strategy == "defector":
-            #i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose
+            #i_rich, i_poor = [sublist[1] for sublist in population]
             for j_rich in range(group_size):
                 for j_poor in range(group_size - j_rich):
                     rich_coef = comb(i_rich, j_rich)

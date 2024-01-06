@@ -1,6 +1,4 @@
 import pairwise_imitation_process
-import random
-import math
 import matplotlib.pyplot as plt
 from populationState_class import PopulationState
 
