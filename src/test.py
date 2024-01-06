@@ -19,8 +19,8 @@ Z_tot = [Zr, Zp]
 N = 6
 mu = 1 / Z
 h = 1
-obstinate_r_c = 0.1
-obstinate_p_c = 0
+obstinate_r_c = 0
+obstinate_p_c = 0.1
 obstinate_r_d = 0
 obstinate_p_d = 0
 obstinate_coop = [int(Zr * obstinate_r_c), int(Zp * obstinate_p_c)]
@@ -99,6 +99,7 @@ def compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinators):
 M = np.zeros([(Zp + 1) * (Zr + 1), (Zp + 1) * (Zr + 1)])
 a_g = []
 M_plot = np.zeros([Zp + 1, Zr + 1])
+M1 = [[[0,0,0,0] for _ in range(Zp + 1)] for _ in range(Zr + 1)]
 for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
     for poor_coop in range(obstinate_coop[1], Zp + 1 - obstinate_defector[1]):
         i = [[rich_coop, Zr - rich_coop], [poor_coop, Zp - poor_coop]]
@@ -112,22 +113,28 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
                         if rich_coop != 0:
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinate_coop[0])
                             M[rich_coop * (Zp + 1) + poor_coop][(rich_coop - 1) * (Zp + 1) + poor_coop] = T_k_XtoY
+                            M1[rich_coop][poor_coop][0] = T_k_XtoY
                     elif X == 1:
                         if rich_coop != Zr:
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinate_defector[0])
                             M[rich_coop * (Zp + 1) + poor_coop][(rich_coop + 1) * (Zp + 1) + poor_coop] = T_k_XtoY
+                            M1[rich_coop][poor_coop][1] = T_k_XtoY
                 else:
                     if X == 0:
                         if poor_coop != 0:
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinate_coop[1])
                             M[rich_coop * (Zp + 1) + poor_coop][rich_coop * (Zp + 1) + (poor_coop - 1)] = T_k_XtoY
+                            M1[rich_coop][poor_coop][2] = T_k_XtoY
                     elif X == 1:
                         if poor_coop != Zp:
                             T_k_XtoY = compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinate_defector[1])
                             M[rich_coop * (Zp + 1) + poor_coop][rich_coop * (Zp + 1) + (poor_coop + 1)] = T_k_XtoY
+                            M1[rich_coop][poor_coop][3] = T_k_XtoY
 
-        M[rich_coop * (Zp + 1) + poor_coop][rich_coop * (Zp + 1) + poor_coop] = 1 - np.sum(
-            M[rich_coop * (Zp + 1) + poor_coop])
+        if rich_coop == 9 and poor_coop == 30:
+            print(M1[rich_coop][poor_coop][1] - M1[rich_coop][poor_coop][0], M1[rich_coop][poor_coop][3] - M1[rich_coop][poor_coop][2])
+
+        M[rich_coop * (Zp + 1) + poor_coop][rich_coop * (Zp + 1) + poor_coop] = 1 - np.sum(M[rich_coop * (Zp + 1) + poor_coop])
 
         # if poor_coop != 0 and rich_coop != 0 and rich_coop != Zr and poor_coop != Zp:
         f_r_c = 0
@@ -135,14 +142,13 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
         f_p_c = 0
         f_p_d = 0
 
-        if rich_coop != 0 and rich_coop != Zr:
-            f_r_c = pgg_game.fraction_group("rich", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-            f_r_d = pgg_game.fraction_group("rich", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-        if poor_coop != 0 and poor_coop != Zp:
-            f_p_c = pgg_game.fraction_group("poor", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-            f_p_d = pgg_game.fraction_group("poor", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
+        #if rich_coop != 0 and rich_coop != Zr:
+            #f_r_c = pgg_game.fraction_group("rich", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
+            #f_r_d = pgg_game.fraction_group("rich", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
+        f_p_c = pgg_game.fraction_group("poor", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
+        #f_p_d = pgg_game.fraction_group("poor", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
 
-        a_g.append(min(f_r_c, 1))
+        a_g.append(min(f_p_c, 1))
 
 print("Compute eigen values")
 w, v = np.linalg.eig(M.transpose())
@@ -151,9 +157,9 @@ j_stationary = np.argmin(abs(w - 1.0))
 print("Compute p_stationary")
 p_stationary = abs(v[:, j_stationary].real)
 
-p_plot = 1 - (p_stationary / np.max(p_stationary))
-
 p_norm = p_stationary / p_stationary.sum()
+
+p_plot = 1 - (p_norm / np.max(p_norm))
 
 for i in range(len(p_plot)):
     M_plot[i % (Zp + 1)][i // (Zp + 1)] = p_plot[i]

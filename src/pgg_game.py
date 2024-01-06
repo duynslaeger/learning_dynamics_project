@@ -194,10 +194,11 @@ def fraction_group(wealth_class, strategy, population, population_size, group_si
                     rich_coef = comb(i_rich, j_rich)
                     poor_coef = comb(i_poor, j_poor)
                     pop_group_coef = comb(population_size - i_rich - i_poor, group_size - j_rich - j_poor)
-                    pay_off = pass_threshold(j_rich, j_poor, b_r, b_p, Mcb_threshold)
+                    pay_off = pass_threshold(j_rich, j_poor, c_r, c_p, Mcb_threshold)
                     result += rich_coef * poor_coef * pop_group_coef * pay_off
                     result2 += rich_coef * poor_coef * pop_group_coef
-            result /= result2
+            if result != 0:
+                result /= result2
 
         if strategy == "defector":
             #i_rich, i_poor = [sublist[1] for sublist in population] # Je suppose

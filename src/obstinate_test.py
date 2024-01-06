@@ -12,7 +12,7 @@ import pgg_game
 np.set_printoptions(threshold=sys.maxsize)
 
 # i = [[115, 35], [35, 15]]
-Z = 200
+Z = 100
 Zr = int(Z * 0.2)
 Zp = int(Z * 0.8)
 Z_tot = [Zr, Zp]
