@@ -126,21 +126,6 @@ for rich_coop in tqdm(range(Zr + 1)):
         M[rich_coop * (Zp + 1) + poor_coop][rich_coop * (Zp + 1) + poor_coop] = 1 - np.sum(
             M[rich_coop * (Zp + 1) + poor_coop])
 
-        # if poor_coop != 0 and rich_coop != 0 and rich_coop != Zr and poor_coop != Zp:
-        f_r_c = 0
-        f_r_d = 0
-        f_p_c = 0
-        f_p_d = 0
-
-        if rich_coop != 0 and rich_coop != Zr:
-            f_r_c = pgg_game.fraction_group("rich", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-            f_r_d = pgg_game.fraction_group("rich", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-        if poor_coop != 0 and poor_coop != Zp:
-            f_p_c = pgg_game.fraction_group("poor", "cooperator", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-            f_p_d = pgg_game.fraction_group("poor", "defector", i, Z, N, b_r, b_p, c_r, c_p, Mcb_threshold, r)
-
-        a_g.append(min(f_r_c, 1))
-
 print("Compute eigen values")
 w, v = np.linalg.eig(M.transpose())
 print("Compute j_stationary")
