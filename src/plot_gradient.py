@@ -12,7 +12,7 @@ import pgg_game
 np.set_printoptions(threshold=sys.maxsize)
 
 # i = [[115, 35], [35, 15]]
-Z = 100
+Z = 200
 Zr = int(Z * 0.2)
 Zp = int(Z * 0.8)
 Z_tot = [Zr, Zp]
@@ -81,12 +81,6 @@ def fermi_fun(a, b, i, beta):
 
 
 def compute_T(i, k, l, X, Y, Z, mu, beta, Z_tot, h, obstinators):
-    # T_k_XtoY = (i[k][X] / Z) * ((i[k][X] - obstinators) / i[k][X]) * (mu + (1 - mu) *
-    #                             (i[k][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
-    #                                 fermi_fun([k, X], [k, Y], i, beta)) +
-    #                              (1 - h) * i[l][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
-    #                                  fermi_fun([k, X], [l, Y], i, beta)))
-    #                             )
     T_k_XtoY = ((i[k][X] - obstinators) / Z) * (mu + (1 - mu) *
                                 (i[k][Y] / (Z_tot[k] - 1 + (1 - h) * Z_tot[l]) * (
                                     fermi_fun([k, X], [k, Y], i, beta)) +
@@ -138,7 +132,7 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
         aG_i = 0.0
         for rc in range(N): # rc represent the number of rich cooperator in the group
             for pc in range(N) : # pc represent the number of poor cooperator in the group
-                if(rc + pc) > M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
+                if (rc + pc) > M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
                     for rd in range(N): # rd represent the number of rich defectors in the group
                         if(rc + pc + rd <= N):
                             for pd in range(N): # pd represent the number of poor defectors in the group
@@ -173,15 +167,17 @@ eta_g = 0
 for i in range(len(a_g)):
     eta_g += p_norm[i] * a_g[i]
 
+print(eta_g)
 plt.figure(figsize=(5, 10))
 plt.imshow(M_plot,cmap=plt.get_cmap('gray'))
-plt.streamplot(X, Y, U, V, density = 0.6, color =speed, linewidth = 1,cmap='viridis')
-cbar = plt.colorbar(label='Speed')  # Add colorbar to show speed values
+plt.streamplot(X, Y, U, V, density = 0.8, color =speed, linewidth = 1,cmap='autumn')
+cbar = plt.colorbar(label='Gradient of selection')  # Add colorbar to show speed values
 cbar.set_ticks([])  # Remove the ticks from the colorbar
 plt.xlabel('X-axis')
 plt.ylabel('Y-axis')
 plt.title('Vector Field with Transition Matrix')
 plt.gca().invert_yaxis()
+plt.savefig("obst_r_c_0.1.png")
 plt.show()
 plt.plot(xs, p_norm)
 plt.show()

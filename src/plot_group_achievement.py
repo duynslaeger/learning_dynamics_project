@@ -103,8 +103,8 @@ for hom in homophily:
     eta_g_over_risk = []
     for risk in risks:
         r = risk
-        print("Percieved risk = ",r)
-        print("Homophily = ",h)
+        print("Percieved risk = ", r)
+        print("Homophily = ", h)
         M = np.zeros([(Zp + 1) * (Zr + 1), (Zp + 1) * (Zr + 1)])
         a_g = []
         M_plot = np.zeros([Zp + 1, Zr + 1])
@@ -146,7 +146,7 @@ for hom in homophily:
                     for pc in range(N) : # pc represent the number of poor cooperator in the group
 
                         # if(rc*c_r + pc*c_p) > Mcb_threshold and(rc + pc) <= N: # if there are enough contribution to reach the threshold
-                        if(rc + pc) > M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
+                        if(rc + pc) >= M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
                             for rd in range(N): # rd represent the number of rich defectors in the group
                                 if(rc + pc + rd <= N):
                                     for pd in range(N): # pd represent the number of poor defectors in the group
@@ -189,4 +189,3 @@ plt.ylabel("Group achievement ($\\eta_G$)")
 plt.legend()
 plt.savefig("graphs/group_achiev_over_risk.png")
 plt.show()
-
