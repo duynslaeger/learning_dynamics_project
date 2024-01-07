@@ -16,7 +16,7 @@ Z_tot = [Zr, Zp]
 N = 6
 mu = 1 / Z
 h = 1
-obstinate_r_c = 0.1
+obstinate_r_c = 0
 obstinate_p_c = 0
 obstinate_r_d = 0
 obstinate_p_d = 0
@@ -35,7 +35,7 @@ c_bar = 0.1
 M_thresh = 3
 
 Mcb_threshold = c_bar * M_thresh * b_bar
-r = 0.2
+r = 0.3
 
 T_coop_rich = 1
 T_defect_rich = 1
@@ -132,7 +132,9 @@ for rich_coop in tqdm(range(obstinate_coop[0], Zr + 1 - obstinate_defector[0])):
         aG_i = 0.0
         for rc in range(N):  # rc represent the number of rich cooperator in the group
             for pc in range(N):  # pc represent the number of poor cooperator in the group
-                if (rc + pc) > M_thresh and (rc + pc) <= N:  # if there are enough cooperators to reach the threshold
+                #if (rc * c_r + pc * c_p) >= Mcb_threshold and (
+                        #rc + pc) <= N:  # Other method, verifies if there are enough contribution to reach the threshold
+                if(rc + pc) >= M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
                     for rd in range(N):  # rd represent the number of rich defectors in the group
                         if (rc + pc + rd <= N):
                             for pd in range(N):  # pd represent the number of poor defectors in the group
@@ -178,8 +180,9 @@ cbar.set_ticks([])  # Remove the ticks from the colorbar
 plt.xlabel('R_C')
 plt.ylabel('P_C')
 plt.title('Gradient vector with Stationay distribution')
+plt.gcf().text(0.3, 0.95, "eta_g: " + str(eta_g), fontsize=11)
 plt.gca().invert_yaxis()
-plt.savefig("obst_r_c_0.1.png")
+plt.savefig("obst_0_0.3.png")
 plt.show()
 plt.plot(xs, p_norm)
 plt.show()

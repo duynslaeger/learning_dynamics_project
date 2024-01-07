@@ -8,7 +8,7 @@ import pgg_game
 
 np.set_printoptions(threshold=sys.maxsize)
 
-Z = 100
+Z = 200
 Zr = int(Z * 0.2)
 Zp = int(Z * 0.8)
 Z_tot = [Zr, Zp]
@@ -134,7 +134,7 @@ for hom in homophily:
                 aG_i = 0.0
                 for rc in range(N): # rc represent the number of rich cooperator in the group
                     for pc in range(N) : # pc represent the number of poor cooperator in the group
-                        # if(rc*c_r + pc*c_p) >= Mcb_threshold and(rc + pc) <= N: # Other method, verifies if there are enough contribution to reach the threshold
+                        #if(rc*c_r + pc*c_p) >= Mcb_threshold and(rc + pc) <= N: # Other method, verifies if there are enough contribution to reach the threshold
                         if(rc + pc) >= M_thresh and(rc + pc) <= N: # if there are enough cooperators to reach the threshold
                             for rd in range(N): # rd represent the number of rich defectors in the group
                                 if(rc + pc + rd <= N):
